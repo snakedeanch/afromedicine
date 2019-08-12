@@ -1,0 +1,55 @@
+library(dplyr)
+library(plyr)
+library(tidyr)
+install.packages("ggplot2")
+library(ggplot2)
+install.packages("car")
+library(car)
+```
+##Load dataset
+
+```{r}
+library(readr)
+Mecp2e1_Weight_Phenotype_ <- read_csv("~/Desktop/Tianna /Mecp2e1_Weight_Phenotype (No Outliers).csv")
+colnames(Mecp2e1_Weight_Phenotype_)[colnames(Mecp2e1_Weight_Phenotype_)=="ID#"] <- "ID"
+View(Mecp2e1_Weight_Phenotype_)
+
+newdata <- select(Mecp2e1_Weight_Phenotype_, ID:Clasping_Score)
+Female <- filter(newdata, Sex == "F")
+View(Female)
+
+
+newdata1 <- select(Mecp2e1_Weight_Phenotype_, ID:Clasping_Score)
+Male <- filter(newdata, Sex == "M")
+View(Male)
+
+
+
+#Male and Female Phenotype Scores
+ggplot(Female,aes(x=Fecal_Collection_Date, y=Phenotype_Score, fill=Genotype)) +
+  geom_boxplot()+
+  theme_bw()+
+  labs(x="Female Collection Date", y="Phenotype Score", title="Female Phenotype Score")
+
+ggplot(Male,aes(x=Fecal_Collection_Date, y=Phenotype_Score, fill=Genotype)) +
+  geom_boxplot()+
+  theme_bw()+
+  labs(x="Female Collection Date", y="Phenotype Score", title="Male Phenotype Score")
+####
+####Male and Female Weight Scores
+fem <- ddply(Female,.(Fecal_Collection_Date,Genotype),summarise, val = mean(Weight_Collection))
+ggplot(Female,aes(x=factor(Fecal_Collection_Date), y=Weight_Collection, fill=Genotype)) +
+  geom_boxplot()+
+  geom_point(data = fem, aes(y = val)) +
+  geom_line(data = fem, aes(y = val, group = Genotype)) + 
+  theme_bw()+
+  labs(x="Female Collection Date", y="Average Weight (grams)", title="Female Weight")
+
+mal <- ddply(Male,.(Fecal_Collection_Date,Genotype),summarise, val = mean(Weight_Collection))
+ggplot(Male,aes(x=Fecal_Collection_Date, y=Weight_Collection, fill=Genotype)) +
+  geom_boxplot()+
+  geom_point(data = mal, aes(y = val)) +
+  geom_line(data = mal, aes(y = val, group = Genotype)) + 
+  theme_bw()+
+  labs(x="Female Collection Date", y="Average Weight (grams)", title="Male Weight")
+####
