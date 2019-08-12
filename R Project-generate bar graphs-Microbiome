@@ -1,0 +1,254 @@
+######Setting Up Environment####
+library(ggplot2)
+library(readr)
+library(doBy)
+###
+
+###Setting up Main Table
+Mecp2e1_Metabolomics <- read_csv("~/Desktop/Mouse_Metabolics_July2019.csv")
+colnames(Mecp2e1_Metabolomics)[colnames(Mecp2e1_Metabolomics)=="Compound#"] <- "Compound"
+View(Mecp2e1_Metabolomics)
+###
+
+##Graph for Female Acetic Acid
+Value = as.numeric(c(Mecp2e1_Metabolomics[6, 7:54]))   #Lists values for Acetic Acid in vector order
+Phenotype = c(as.matrix(Mecp2e1_Metabolomics[2,7:54])) # Lists mouse phenotypes in order (values and phenotypes match original data)
+data1=data.frame(Phenotype, Value) #If you want to verify use View(data1) and compare to View(Mecp2e1_Metabolomics)
+summary<-summaryBy(Value~Phenotype, FUN=c(mean,sd),data=data1) #generates means and standard deviations of values
+summary
+Order = c(4,1,5,2,6,3) #set up forces values into the right order (ELSE disordered)
+Aceticacidtable <- data.frame(summary,Order)
+View(Aceticacidtable)
+Aceticacidtable$Phenotype<-factor(Aceticacidtable$Phenotype, levels = Aceticacidtable$Phenotype[(Aceticacidtable$Order)])
+ggplot(Aceticacidtable, aes( y=Value.mean, x=Phenotype)) + 
+  geom_bar(position="dodge", stat="identity", color = "red", fill = c("red","darkred", "red", "darkred","red","darkred")) +
+  geom_errorbar( aes(x=Phenotype, ymin=Value.mean - Value.sd/sqrt(8), ymax=Value.mean+Value.sd/sqrt(8)), width=0.4, colour="black", alpha=0.9, size = 1.3) +
+  ggtitle("Female Acetic Acid")+
+  theme(plot.title=element_text(size=32),
+                                      axis.title=element_text(size=16,face="bold"))
+####
+##Graph for Male Acetic Acid
+Value = as.numeric(c(Mecp2e1_Metabolomics[6, 55:102]))   #Lists values for Acetic Acid in vector order
+Phenotype = c(as.matrix(Mecp2e1_Metabolomics[2,55:102])) # Lists mouse phenotypes in order (values and phenotypes match original data)
+data1=data.frame(Phenotype, Value) #If you want to verify use View(data1) and compare to View(Mecp2e1_Metabolomics)
+summary<-summaryBy(Value~Phenotype, FUN=c(mean,sd),data=data1) #generates means and standard deviations of values
+summary
+Order = c(4,1,5,2,6,3) #set up forces values into the right order (ELSE disordered)
+Aceticacidtable <- data.frame(summary,Order)
+View(Aceticacidtable)
+Aceticacidtable$Phenotype<-factor(Aceticacidtable$Phenotype, levels = Aceticacidtable$Phenotype[(Aceticacidtable$Order)])
+ggplot(Aceticacidtable, aes( y=Value.mean, x=Phenotype) ) + 
+  geom_bar(position="dodge", stat="identity", color = "blue", fill = c("blue","darkblue", "blue", "darkblue","blue","darkblue")) +
+  geom_errorbar( aes(x=Phenotype, ymin=Value.mean - Value.sd/sqrt(8), ymax=Value.mean+Value.sd/sqrt(8)), width=0.4, colour="black", alpha=0.9, size = 1.3) +
+  ggtitle("Male Acetic Acid", 10)+
+  theme(plot.title=element_text(size=32),
+      axis.title=element_text(size=16,face="bold"))
+####
+####FAacidttest
+#Dtype30<- c(rnorm(8, mean = 4.0225, sd = 0.5927599))
+#Wildtype30<-c(rnorm(8, mean=3.7375,sd=0.7013813))
+#t.test(Dtype30, Wildtype30, paired=TRUE)
+
+#Dtype60<- c(rnorm(8, mean = 3.48500, sd = 0.6177378))
+#Wildtype60<-c(rnorm(8, mean=3.85,sd=0.6220473))
+#t.test(Dtype60, Wildtype60, paired=TRUE)
+
+#Dtype150<- c(rnorm(8, mean = 3.70375, sd = 0.4214579))
+#Wildtype150<-c(rnorm(8, mean=3.91750,sd=0.7131770))
+#t.test(Dtype150, Wildtype150, paired=TRUE)
+
+
+
+
+
+
+##Graph for Female Butyirc Acid
+Value = as.numeric(c(Mecp2e1_Metabolomics[7, 7:54]))   #Lists values for Acetic Acid in vector order
+Phenotype = c(as.matrix(Mecp2e1_Metabolomics[2,7:54])) # Lists mouse phenotypes in order (values and phenotypes match original data)
+data1=data.frame(Phenotype, Value) #If you want to verify use View(data1) and compare to View(Mecp2e1_Metabolomics)
+summary<-summaryBy(Value~Phenotype, FUN=c(mean,sd),data=data1) #generates means and standard deviations of values
+summary
+Order = c(4,1,5,2,6,3) #set up forces values into the right order (ELSE disordered)
+Aceticacidtable <- data.frame(summary,Order)
+View(Aceticacidtable)
+Aceticacidtable$Phenotype<-factor(Aceticacidtable$Phenotype, levels = Aceticacidtable$Phenotype[(Aceticacidtable$Order)])
+p <- ggplot(Aceticacidtable, aes( y=Value.mean, x=Phenotype)) + 
+  geom_bar(position="dodge", stat="identity", color = "red", fill = c("red","darkred", "red", "darkred","red","darkred")) +
+  geom_errorbar( aes(x=Phenotype, ymin=Value.mean - Value.sd/sqrt(8), ymax=Value.mean+Value.sd/sqrt(8)), width=0.4, colour="black", alpha=0.9, size = 1.3) +
+  ggtitle("Female Butyric Acid")+  
+  theme(plot.title=element_text(size=32),
+                                         axis.title=element_text(size=16,face="bold"))
+label.df <- data.frame(Phenotype = c(1.5, 1.5),
+                       Value.mean = c(1.1, 1.1))
+
+q <- p + geom_text(data = label.df, label = "*", size = 10) +
+ geom_line(data = label.df, aes(1:2,1:1), lty=1, size = 3)
+label.df1 <- data.frame(Phenotype = c(3.5, 3.5),
+                       Value.mean = c(2.6, 2.6))
+
+q + geom_text(data = label.df1, label = "*", size = 10) +
+  geom_line(data = label.df, aes(3:4,2.5:2.5), lty=1, size = 3)
+####
+##Graph for Male Butyric Acid
+Value = as.numeric(c(Mecp2e1_Metabolomics[7, 55:102]))   #Lists values for Acetic Acid in vector order
+Phenotype = c(as.matrix(Mecp2e1_Metabolomics[2,55:102])) # Lists mouse phenotypes in order (values and phenotypes match original data)
+data1=data.frame(Phenotype, Value) #If you want to verify use View(data1) and compare to View(Mecp2e1_Metabolomics)
+summary<-summaryBy(Value~Phenotype, FUN=c(mean,sd),data=data1) #generates means and standard deviations of values
+summary
+Order = c(4,1,5,2,6,3) #set up forces values into the right order (ELSE disordered)
+Aceticacidtable <- data.frame(summary,Order)
+View(Aceticacidtable)
+Aceticacidtable$Phenotype<-factor(Aceticacidtable$Phenotype, levels = Aceticacidtable$Phenotype[(Aceticacidtable$Order)])
+ggplot(Aceticacidtable, aes( y=Value.mean, x=Phenotype ) ) + 
+  geom_bar(position="dodge", stat="identity", color = "blue", fill = c("blue","darkblue", "blue", "darkblue","blue","darkblue")) +
+  geom_errorbar( aes(x=Phenotype, ymin=Value.mean - Value.sd/sqrt(8), ymax=Value.mean+Value.sd/sqrt(8)), width=0.4, colour="black", alpha=0.9, size = 1.3) +
+  ggtitle("Male Butyirc Acid")+
+  theme(plot.title=element_text(size=32),
+        axis.title=element_text(size=16,face="bold"))
+####
+#####FBacidttest
+#Dtype30<- c(rnorm(8, mean = .72, sd = 0.485936))
+#Wildtype30<-c(rnorm(8, mean=.27375,sd=0.09334077))
+#t.test(Dtype30, Wildtype30, paired=TRUE)
+
+#Dtype60<- c(rnorm(8, mean = 2.01625, sd = .93008352))
+#Wildtype60<-c(rnorm(8, mean=0.46125,sd=.24526589))
+#t.test(Dtype60, Wildtype60, paired=TRUE)
+
+#Dtype150<- c(rnorm(8, mean = 1.50375, sd = 1.12077699))
+#Wildtype150<-c(rnorm(8, mean=0.7475,sd=1.08019509))
+#t.test(Dtype150, Wildtype150, paired=TRUE)
+
+##Graph for Female Formic Acid
+Value = as.numeric(c(Mecp2e1_Metabolomics[8, 7:54]))   #Lists values for Acetic Acid in vector order
+Phenotype = c(as.matrix(Mecp2e1_Metabolomics[2,7:54])) # Lists mouse phenotypes in order (values and phenotypes match original data)
+data1=data.frame(Phenotype, Value) #If you want to verify use View(data1) and compare to View(Mecp2e1_Metabolomics)
+summary<-summaryBy(Value~Phenotype, FUN=c(mean,sd),data=data1) #generates means and standard deviations of values
+summary
+Order = c(4,1,5,2,6,3) #set up forces values into the right order (ELSE disordered)
+Aceticacidtable <- data.frame(summary,Order)
+View(Aceticacidtable)
+Aceticacidtable$Phenotype<-factor(Aceticacidtable$Phenotype, levels = Aceticacidtable$Phenotype[(Aceticacidtable$Order)])
+p <- ggplot(Aceticacidtable, aes( y=Value.mean, x=Phenotype)) + 
+  geom_bar(position="dodge", stat="identity", color = "red", fill = c("red","darkred", "red", "darkred","red","darkred")) +
+  geom_errorbar( aes(x=Phenotype, ymin=Value.mean - Value.sd/sqrt(8), ymax=Value.mean+Value.sd/sqrt(8)), width=0.4, colour="black", alpha=0.9, size = 1.3) +
+  ggtitle("Female Formic Acid")+
+  theme(plot.title=element_text(size=32),
+        axis.title=element_text(size=16,face="bold"))
+label.df <- data.frame(Phenotype = c(3.5, 3.5),
+                       Value.mean = c(0.22, 0.22))
+
+p + geom_text(data = label.df, label = "*", size = 10) +
+  geom_line(data = label.df, aes(3:4,0.2:0.2), lty=1, size = 3)
+####
+##Graph for Male Formic Acid
+Value = as.numeric(c(Mecp2e1_Metabolomics[8, 55:102]))   #Lists values for Acetic Acid in vector order
+Phenotype = c(as.matrix(Mecp2e1_Metabolomics[2,55:102])) # Lists mouse phenotypes in order (values and phenotypes match original data)
+data1=data.frame(Phenotype, Value) #If you want to verify use View(data1) and compare to View(Mecp2e1_Metabolomics)
+summary<-summaryBy(Value~Phenotype, FUN=c(mean,sd),data=data1) #generates means and standard deviations of values
+summary
+Order = c(4,1,5,2,6,3) #set up forces values into the right order (ELSE disordered)
+Aceticacidtable <- data.frame(summary,Order)
+View(Aceticacidtable)
+Aceticacidtable$Phenotype<-factor(Aceticacidtable$Phenotype, levels = Aceticacidtable$Phenotype[(Aceticacidtable$Order)])
+ggplot(Aceticacidtable, aes( y=Value.mean, x=Phenotype ) ) + 
+  geom_bar(position="dodge", stat="identity", color = "blue", fill = c("blue","darkblue", "blue", "darkblue","blue","darkblue")) +
+  geom_errorbar( aes(x=Phenotype, ymin=Value.mean - Value.sd/sqrt(8), ymax=Value.mean+Value.sd/sqrt(8)), width=0.4, colour="black", alpha=0.9, size = 1.3) +
+  ggtitle("Male Formic Acid")+
+  theme(plot.title=element_text(size=32),
+        axis.title=element_text(size=16,face="bold"))
+####
+
+
+##Graph for Female Isovaleric Acid
+Value = as.numeric(c(Mecp2e1_Metabolomics[9, 7:54]))   #Lists values for Acetic Acid in vector order
+Phenotype = c(as.matrix(Mecp2e1_Metabolomics[2,7:54])) # Lists mouse phenotypes in order (values and phenotypes match original data)
+data1=data.frame(Phenotype, Value) #If you want to verify use View(data1) and compare to View(Mecp2e1_Metabolomics)
+summary<-summaryBy(Value~Phenotype, FUN=c(mean,sd),data=data1) #generates means and standard deviations of values
+summary
+Order = c(4,1,5,2,6,3) #set up forces values into the right order (ELSE disordered)
+Aceticacidtable <- data.frame(summary,Order)
+View(Aceticacidtable)
+Aceticacidtable$Phenotype<-factor(Aceticacidtable$Phenotype, levels = Aceticacidtable$Phenotype[(Aceticacidtable$Order)])
+p <- ggplot(Aceticacidtable, aes( y=Value.mean, x=Phenotype)) + 
+  geom_bar(position="dodge", stat="identity", color = "red", fill = c("red","darkred", "red", "darkred","red","darkred")) +
+  geom_errorbar( aes(x=Phenotype, ymin=Value.mean - Value.sd/sqrt(8), ymax=Value.mean+Value.sd/sqrt(8)), width=0.4, colour="black", alpha=0.9, size = 1.3) +
+  ggtitle("Female Isovaleric Acid")+
+  theme(plot.title=element_text(size=32),
+        axis.title=element_text(size=16,face="bold"))
+label.df <- data.frame(Phenotype = c(3.5, 3.5),
+                       Value.mean = c(0.027, 0.027))
+
+q <- p + geom_text(data = label.df, label = "*", size = 10) +
+  geom_line(data = label.df, aes(3:4,0.025:0.025), lty=1, size = 3)
+label.df1 <- data.frame(Phenotype = c(5.5, 5.5),
+                        Value.mean = c(0.027, 0.027))
+
+q + geom_text(data = label.df1, label = "*", size = 10) +
+  geom_line(data = label.df, aes(5:6,0.025:0.025), lty=1, size = 3)
+####
+##Graph for Male Isovaleric Acid
+Value = as.numeric(c(Mecp2e1_Metabolomics[9, 55:102]))   #Lists values for Acetic Acid in vector order
+Phenotype = c(as.matrix(Mecp2e1_Metabolomics[2,55:102])) # Lists mouse phenotypes in order (values and phenotypes match original data)
+data1=data.frame(Phenotype, Value) #If you want to verify use View(data1) and compare to View(Mecp2e1_Metabolomics)
+summary<-summaryBy(Value~Phenotype, FUN=c(mean,sd),data=data1) #generates means and standard deviations of values
+summary
+Order = c(4,1,5,2,6,3) #set up forces values into the right order (ELSE disordered)
+Aceticacidtable <- data.frame(summary,Order)
+View(Aceticacidtable)
+Aceticacidtable$Phenotype<-factor(Aceticacidtable$Phenotype, levels = Aceticacidtable$Phenotype[(Aceticacidtable$Order)])
+ggplot(Aceticacidtable, aes( y=Value.mean, x=Phenotype ) ) + 
+  geom_bar(position="dodge", stat="identity", color = "blue", fill = c("blue","darkblue", "blue", "darkblue","blue","darkblue")) +
+  geom_errorbar( aes(x=Phenotype, ymin=Value.mean - Value.sd/sqrt(8), ymax=Value.mean+Value.sd/sqrt(8)), width=0.4, colour="black", alpha=0.9, size = 1.3) +
+  ggtitle("Male Isovaleric Acid")+
+  theme(plot.title=element_text(size=32),
+        axis.title=element_text(size=16,face="bold"))
+####
+
+
+##Graph for Female Propanoic Acid
+Value = as.numeric(c(Mecp2e1_Metabolomics[10, 7:54]))   #Lists values for Acetic Acid in vector order
+Phenotype = c(as.matrix(Mecp2e1_Metabolomics[2,7:54])) # Lists mouse phenotypes in order (values and phenotypes match original data)
+data1=data.frame(Phenotype, Value) #If you want to verify use View(data1) and compare to View(Mecp2e1_Metabolomics)
+summary<-summaryBy(Value~Phenotype, FUN=c(mean,sd),data=data1) #generates means and standard deviations of values
+summary
+Order = c(4,1,5,2,6,3) #set up forces values into the right order (ELSE disordered)
+Aceticacidtable <- data.frame(summary,Order)
+View(Aceticacidtable)
+Aceticacidtable$Phenotype<-factor(Aceticacidtable$Phenotype, levels = Aceticacidtable$Phenotype[(Aceticacidtable$Order)])
+p <- ggplot(Aceticacidtable, aes( y=Value.mean, x=Phenotype)) + 
+  geom_bar(position="dodge", stat="identity", color = "red", fill = c("red","darkred", "red", "darkred","red","darkred")) +
+  geom_errorbar( aes(x=Phenotype, ymin=Value.mean - Value.sd/sqrt(8), ymax=Value.mean+Value.sd/sqrt(8)), width=0.4, colour="black", alpha=0.9, size = 1.3) +
+  ggtitle("Female Propanoic Acid")+
+  theme(plot.title=element_text(size=32),
+        axis.title=element_text(size=16,face="bold"))
+label.df <- data.frame(Phenotype = c(3.5, 3.5),
+                       Value.mean = c(0.65, 0.65))
+
+q <- p + geom_text(data = label.df, label = "*", size = 10) +
+  geom_line(data = label.df, aes(3:4,0.61:0.61), lty=1, size = 3)
+label.df1 <- data.frame(Phenotype = c(5.5, 5.5),
+                        Value.mean = c(0.69, 0.69))
+
+q + geom_text(data = label.df1, label = "*", size = 10) +
+  geom_line(data = label.df, aes(5:6,0.65:0.65), lty=1, size = 3)
+####
+##Graph for Male Propanoic Acid
+Value = as.numeric(c(Mecp2e1_Metabolomics[10, 55:102]))   #Lists values for Acetic Acid in vector order
+Phenotype = c(as.matrix(Mecp2e1_Metabolomics[2,55:102])) # Lists mouse phenotypes in order (values and phenotypes match original data)
+data1=data.frame(Phenotype, Value) #If you want to verify use View(data1) and compare to View(Mecp2e1_Metabolomics)
+summary<-summaryBy(Value~Phenotype, FUN=c(mean,sd),data=data1) #generates means and standard deviations of values
+summary
+Order = c(4,1,5,2,6,3) #set up forces values into the right order (ELSE disordered)
+Aceticacidtable <- data.frame(summary,Order)
+View(Aceticacidtable)
+Aceticacidtable$Phenotype<-factor(Aceticacidtable$Phenotype, levels = Aceticacidtable$Phenotype[(Aceticacidtable$Order)])
+ggplot(Aceticacidtable, aes( y=Value.mean, x=Phenotype ) ) + 
+  geom_bar(position="dodge", stat="identity", color = "blue", fill = c("blue","darkblue", "blue", "darkblue","blue","darkblue")) +
+  geom_errorbar( aes(x=Phenotype, ymin=Value.mean - Value.sd/sqrt(8), ymax=Value.mean+Value.sd/sqrt(8)), width=0.4, colour="black", alpha=0.9, size = 1.3) +
+  ggtitle("Male Propanoic Acid")+
+  theme(plot.title=element_text(size=32),
+        axis.title=element_text(size=16,face="bold"))
+####
+
+
